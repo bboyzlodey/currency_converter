@@ -3,9 +3,9 @@ package com.example.currencyconverter.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.example.currencyconverter.core.data.source.local.AppDatabase
-import com.example.currencyconverter.core.data.source.local.CurrencyDao
-import com.example.currencyconverter.core.network.CurrencyApiService
+import com.example.currencyconverter.data.local.AppDatabase
+import com.example.currencyconverter.data.local.CurrencyDao
+import com.example.currencyconverter.data.remote.CurrencyApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module

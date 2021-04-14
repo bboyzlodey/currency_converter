@@ -1,6 +1,5 @@
-package com.example.currencyconverter.core.network
+package com.example.currencyconverter.data.remote
 
-import com.example.currencyconverter.core.datalayer.CurrencyRates
 import retrofit2.http.GET
 
 interface CurrencyApiService {

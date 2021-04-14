@@ -1,4 +1,4 @@
-package com.example.currencyconverter.core.data.source
+package com.example.currencyconverter.data
 
 import android.content.SharedPreferences
 import javax.inject.Inject

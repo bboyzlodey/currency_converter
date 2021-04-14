@@ -16,10 +16,6 @@ class DateTimeHelper @Inject constructor() {
     private val now: Date
             get() = Date()
 
-    fun dateTimeBefore(datetime: String) : Boolean {
-        return getDateTime(datetime).before(now)
-    }
-
     private fun getDateTime(datetime: String, format: String = WEB_API_TIMESTAMP_FORMAT) : Date{
         val date = SimpleDateFormat(format, Locale.ENGLISH).parse(datetime)
         return date

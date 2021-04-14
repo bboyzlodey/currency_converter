@@ -1,10 +1,8 @@
-package com.example.currencyconverter
+package com.example.currencyconverter.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import dagger.Module
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
+import com.example.currencyconverter.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

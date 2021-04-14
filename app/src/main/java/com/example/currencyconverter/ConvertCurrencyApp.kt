@@ -1,7 +1,7 @@
-package com.example.currencyconverter.core
+package com.example.currencyconverter
 
 import android.app.Application
-import com.example.currencyconverter.core.network.CurrencyApiService
+import com.example.currencyconverter.data.remote.CurrencyApiService
 import dagger.hilt.android.HiltAndroidApp
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,7 +17,7 @@ class ConvertCurrencyApp : Application() {
     }
 
     @Inject
-    fun provideCurrencyApiService() : CurrencyApiService{
+    fun provideCurrencyApiService() : CurrencyApiService {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())

@@ -1,10 +1,9 @@
-package com.example.currencyconverter.core.datalayer
+package com.example.currencyconverter.data
 
-import com.example.currencyconverter.core.data.source.CacheSettings
-import com.example.currencyconverter.core.data.source.local.CurrencyDao
-import com.example.currencyconverter.core.data.source.local.DBCurrency
-import com.example.currencyconverter.core.network.CurrencyApiService
-import com.example.currencyconverter.utils.DateTimeHelper
+import com.example.currencyconverter.data.local.CurrencyDao
+import com.example.currencyconverter.data.local.DBCurrency
+import com.example.currencyconverter.data.remote.CurrencyRates
+import com.example.currencyconverter.data.remote.CurrencyApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -31,7 +30,12 @@ class CurrencyRepository @Inject constructor() {
             cacheSettings.nextCurrencyRateUpdating = response.nextUpdate
         }
         Timber.i("updateLocalData")
-        val local = response.rates.map { DBCurrency(it.key, it.value.toFloat()) }
+        val local = response.rates.map {
+            DBCurrency(
+                it.key,
+                it.value.toFloat()
+            )
+        }
         db.insertAll(local)
 
     }
