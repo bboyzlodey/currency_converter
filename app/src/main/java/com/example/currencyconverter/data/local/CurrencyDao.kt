@@ -9,8 +9,5 @@ interface CurrencyDao {
     fun getAll() : Flow< List<DBCurrency>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vararg rates: DBCurrency)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(rates: List<DBCurrency>)
 }

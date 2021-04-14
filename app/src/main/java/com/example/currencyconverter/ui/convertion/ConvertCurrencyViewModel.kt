@@ -69,7 +69,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
 
     private fun getData() {
         viewModelScope.launch {
-            currencyRepo.getLocalData()
+            currencyRepo.getCurrencyRates()
                 .onStart { isLoading.value = true }
                 .onCompletion { isLoading.value = false }
                 .collect {
@@ -96,7 +96,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
                 Timber.i("delay start")
                 delay(nextUpdate)
                 Timber.i("delay ended")
-                currencyRepo.updateLocalData()
+                currencyRepo.fetchCurrencyRates()
             } catch (e: Exception) {
                 Timber.e(e)
             }
@@ -113,7 +113,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     fun onCurrencyButtonClicked(field: CurrencyMode) {
         val currencyList = availableCurrencies?.map { it.code } ?: emptyList()
         dialog.value = when (field) {
-            CurrencyMode.INPUT -> {
+            CurrencyMode.SOURCE -> {
                 DialogFactory.DialogData(
                     context.getString(R.string.choose_currency_dialog_title),
                     {},
@@ -127,7 +127,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
                     }
                 )
             }
-            CurrencyMode.OUTPUT -> {
+            CurrencyMode.TARGET -> {
                 DialogFactory.DialogData(
                     context.getString(R.string.choose_currency_dialog_title),
                     {},

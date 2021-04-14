@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import com.example.currencyconverter.R
 import com.example.currencyconverter.databinding.FragmentConvertCurrencyBinding
 import com.example.currencyconverter.utils.DialogFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,10 +52,10 @@ class ConvertCurrencyFragment : Fragment() {
             viewModel.onSwapClicked()
         }
         binding.sourceCurrency.setOnClickListener {
-            viewModel.onCurrencyButtonClicked(CurrencyMode.INPUT)
+            viewModel.onCurrencyButtonClicked(CurrencyMode.SOURCE)
         }
         binding.targetCurrency.setOnClickListener {
-            viewModel.onCurrencyButtonClicked(CurrencyMode.OUTPUT)
+            viewModel.onCurrencyButtonClicked(CurrencyMode.TARGET)
         }
 
         binding.sourceCurrencyEditText.doAfterTextChanged { editable ->
@@ -64,11 +63,5 @@ class ConvertCurrencyFragment : Fragment() {
                 viewModel.onSourceInputTextChanged(editable.toString())
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            ConvertCurrencyFragment()
     }
 }

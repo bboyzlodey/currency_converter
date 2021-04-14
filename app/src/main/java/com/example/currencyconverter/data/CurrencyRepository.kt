@@ -2,7 +2,6 @@ package com.example.currencyconverter.data
 
 import com.example.currencyconverter.data.local.CurrencyDao
 import com.example.currencyconverter.data.local.DBCurrency
-import com.example.currencyconverter.data.remote.CurrencyRates
 import com.example.currencyconverter.data.remote.CurrencyApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -12,20 +11,17 @@ import javax.inject.Inject
 
 class CurrencyRepository @Inject constructor() {
 
-    @Inject lateinit var webApi: CurrencyApiService
-    @Inject lateinit var db: CurrencyDao
+    @Inject lateinit var serverApi: CurrencyApiService
+    @Inject lateinit var database: CurrencyDao
     @Inject lateinit var cacheSettings: CacheSettings
 
-    suspend fun getCurrencyRates() : CurrencyRates {
-        return webApi.getCurrencyRates()
+
+    fun getCurrencyRates() : Flow<List<DBCurrency>> {
+        return database.getAll()
     }
 
-    fun getLocalData() : Flow<List<DBCurrency>> {
-        return db.getAll()
-    }
-
-    suspend fun updateLocalData() {
-        val response = webApi.getCurrencyRates()
+    suspend fun fetchCurrencyRates() {
+        val response = serverApi.getCurrencyRates()
         withContext(Dispatchers.Main) {
             cacheSettings.nextCurrencyRateUpdating = response.nextUpdate
         }
@@ -36,7 +32,6 @@ class CurrencyRepository @Inject constructor() {
                 it.value.toFloat()
             )
         }
-        db.insertAll(local)
-
+        database.insertAll(local)
     }
 }
