@@ -37,6 +37,16 @@
             tools:context=".ui.convertion.ConvertCurrencyFragment">
 
 
+            <ProgressBar
+                show="@{viewModel.isLoading}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progressTint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userSendInputLayout"
                 style="@style/Widget.Design.TextInputLayout"

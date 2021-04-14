@@ -12,7 +12,10 @@ import com.example.currencyconverter.utils.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,14 +36,15 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     @Inject
     lateinit var cacheSettings: CacheSettings
 
-    val dialog = MutableLiveData<DialogFactory.DialogData>()
 
     private var availableCurrencies: List<DBCurrency>? = null
+    private var inputCurrencyValue = "1.0"
+
+    val dialog = MutableLiveData<DialogFactory.DialogData>()
     var selectedInputCurrency = MutableLiveData<String>("USD")
     var selectedOutputCurrency = MutableLiveData<String>("RUB")
     var outputCurrencyValue = MutableLiveData<String>("")
-    private var inputCurrencyValue = "1.0"
-    private val moneyFormat = "%.2f"
+    var isLoading = MutableLiveData<Boolean>()
 
     @OnLifecycleEvent(value = Lifecycle.Event.ON_START)
     fun onStart() {
@@ -56,8 +60,10 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
         if (inputCurrency == null || outputCurrency == null || inputValue == 0f) {
             outputCurrencyValue.value = "00.00"
         } else {
+            val newOutputCurrencyValue =
+                ((inputValue / inputCurrency.fraction) * outputCurrency.fraction)
             outputCurrencyValue.value =
-                moneyFormat.format(((inputValue / inputCurrency.fraction) * outputCurrency.fraction))
+                context.getString(R.string.currency_format, newOutputCurrencyValue)
                     .replace(',', '.')
         }
     }
@@ -65,7 +71,10 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     private fun getData() {
         viewModelScope.launch {
             currencyRepo.getLocalData()
+                .onStart { isLoading.value = true }
+                .onCompletion { isLoading.value = false }
                 .collect {
+                    isLoading.value = false
                     processCurrencyRateUpdated(rates = it)
                     createUpdatingCoroutine()
                 }
@@ -109,8 +118,8 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
                 DialogFactory.DialogData(
                     context.getString(R.string.choose_currency_dialog_title),
                     {},
-                    "Cancel",
-                    "Apply",
+                    context.getString(R.string.ok),
+                    context.getString(R.string.cancel),
                     currencyList,
                     currencyList.indexOf(selectedInputCurrency.value),
                     {
@@ -123,8 +132,8 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
                 DialogFactory.DialogData(
                     context.getString(R.string.choose_currency_dialog_title),
                     {},
-                    "Cancel",
-                    "Apply",
+                    context.getString(R.string.ok),
+                    context.getString(R.string.cancel),
                     currencyList,
                     currencyList.indexOf(selectedOutputCurrency.value),
                     {

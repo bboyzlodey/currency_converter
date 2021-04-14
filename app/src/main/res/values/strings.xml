@@ -3,4 +3,7 @@
     <string name="you_send">You send</string>
     <string name="they_get">They get</string>
     <string name="choose_currency_dialog_title">Choose a currency</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="currency_format">%.2f</string>
 </resources>
