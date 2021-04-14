@@ -27,12 +27,12 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel() {
 
     fun onSwapClicked() {
         Timber.i("onSwipedClicked!")
-        val isPast =
+        val localDataExpired =
             cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.dateTimeBefore(it) }
                 ?: false
-        Timber.d("isPast = $isPast")
+        Timber.d("localDataExpired = $localDataExpired")
         Timber.d("Cache timestamp: ${cacheSettings.nextCurrencyRateUpdating}")
-        if (!isPast) {
+        if (localDataExpired) {
             viewModelScope.launch {
                 try {
                     currencyRepo.updateLocalData()
