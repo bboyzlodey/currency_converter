@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="converter_screen_padding_top">36dp</dimen>
+    <dimen name="converter_screen_padding_start">28dp</dimen>
+    <dimen name="converter_screen_padding_end">30dp</dimen>
+</resources>
