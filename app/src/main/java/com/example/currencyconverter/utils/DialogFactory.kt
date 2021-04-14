@@ -7,6 +7,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object DialogFactory {
     class DialogData(
+        val title: String,
         val neutralClicked: () -> Unit,
         val neutralButtonTitle: String? = null,
         val positiveButtonTitle: String? = null,
@@ -17,6 +18,7 @@ object DialogFactory {
 
     fun showDialog(context: Context, data: DialogData) {
         MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Dialog)
+            .setTitle(data.title)
             .setNeutralButton(data.neutralButtonTitle) { dialog, which -> data.neutralClicked.invoke() }
             .setPositiveButton(data.positiveButtonTitle) { dialog, _ ->
                 data.itemSelectedListener.invoke(

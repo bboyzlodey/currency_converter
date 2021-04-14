@@ -1,6 +1,8 @@
 package com.example.currencyconverter.ui.convertion
 
+import android.content.Context
 import androidx.lifecycle.*
+import com.example.currencyconverter.R
 import com.example.currencyconverter.core.data.source.CacheSettings
 import com.example.currencyconverter.core.data.source.local.DBCurrency
 import com.example.currencyconverter.core.datalayer.CurrencyRepository
@@ -8,6 +10,7 @@ import com.example.currencyconverter.utils.DateTimeHelper
 import com.example.currencyconverter.utils.DialogFactory
 import com.example.currencyconverter.utils.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -16,6 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObserver {
+
+    @ApplicationContext
+    @Inject
+    lateinit var context: Context
 
     @Inject
     lateinit var dateTimeHelper: DateTimeHelper
@@ -100,6 +107,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
         dialog.value = when (field) {
             CurrencyMode.INPUT -> {
                 DialogFactory.DialogData(
+                    context.getString(R.string.choose_currency_dialog_title),
                     {},
                     "Cancel",
                     "Apply",
@@ -113,6 +121,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
             }
             CurrencyMode.OUTPUT -> {
                 DialogFactory.DialogData(
+                    context.getString(R.string.choose_currency_dialog_title),
                     {},
                     "Cancel",
                     "Apply",
