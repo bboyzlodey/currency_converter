@@ -8,6 +8,7 @@ import com.example.currencyconverter.utils.DateTimeHelper
 import com.example.currencyconverter.utils.DialogFactory
 import com.example.currencyconverter.utils.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,36 +39,24 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     }
 
     private fun init() {
-        val localDataExpired =
-            cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.dateTimeBefore(it) }
-                ?: true
-        if (localDataExpired) {
-            viewModelScope.launch {
-                try {
-                    currencyRepo.updateLocalData()
-                    val datas = currencyRepo.getLocalData()
-                    availableCurrencies = datas
-                    Timber.d("Data is: $datas")
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
+        val nextUpdate =
+            cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.getLostTime(it) }
+                ?: 100
+        Timber.i("Next update exist with delay: $nextUpdate")
+        viewModelScope.launch {
+            try {
+                availableCurrencies = currencyRepo.getLocalData()
+                delay(nextUpdate)
+                currencyRepo.updateLocalData()
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
 
-            }
-        } else {
-            viewModelScope.launch {
-                try {
-                    val datas = currencyRepo.getLocalData()
-                    availableCurrencies = datas
-                    Timber.d("Data is: $datas")
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
-            }
         }
     }
 
     fun onSwapClicked() {
-        Timber.i("onSwipeClicked!")
+        Timber.i("onSwapClicked")
         selectedInputCurrency swap selectedOutputCurrency
         recalculate()
     }

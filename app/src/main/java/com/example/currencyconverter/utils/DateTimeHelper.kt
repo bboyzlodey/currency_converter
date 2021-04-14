@@ -12,8 +12,21 @@ class DateTimeHelper @Inject constructor() {
     companion object {
         const val WEB_API_TIMESTAMP_FORMAT = "E, dd MMM yyyy HH:mm:ss Z"
     }
+
+    private val now: Date
+            get() = Date()
+
     fun dateTimeBefore(datetime: String) : Boolean {
-        val date = SimpleDateFormat(WEB_API_TIMESTAMP_FORMAT, Locale.ENGLISH).parse(datetime)
-        return date.before(Date())
+        return getDateTime(datetime).before(now)
+    }
+
+    private fun getDateTime(datetime: String, format: String = WEB_API_TIMESTAMP_FORMAT) : Date{
+        val date = SimpleDateFormat(format, Locale.ENGLISH).parse(datetime)
+        return date
+    }
+
+    fun getLostTime(datetime: String) : Long {
+        val lostTime = getDateTime(datetime).time - now.time
+        return if (lostTime > 0) lostTime else 0
     }
 }
