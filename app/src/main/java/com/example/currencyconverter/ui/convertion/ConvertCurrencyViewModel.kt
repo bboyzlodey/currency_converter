@@ -1,20 +1,19 @@
 package com.example.currencyconverter.ui.convertion
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.currencyconverter.core.data.source.CacheSettings
 import com.example.currencyconverter.core.data.source.local.DBCurrency
 import com.example.currencyconverter.core.datalayer.CurrencyRepository
 import com.example.currencyconverter.utils.DateTimeHelper
 import com.example.currencyconverter.utils.DialogFactory
+import com.example.currencyconverter.utils.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ConvertCurrencyViewModel @Inject constructor() : ViewModel() {
+class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObserver {
 
     @Inject
     lateinit var dateTimeHelper: DateTimeHelper
@@ -33,18 +32,21 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel() {
     var outputCurrencyValue = MutableLiveData<String>("")
     private var inputCurrencyValue = "0.0"
 
-    fun onSwapClicked() {
-        Timber.i("onSwipeClicked!")
+    @OnLifecycleEvent(value = Lifecycle.Event.ON_START)
+    fun onStart() {
+        init()
+    }
+
+    private fun init() {
         val localDataExpired =
             cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.dateTimeBefore(it) }
-                ?: false
-        Timber.d("localDataExpired = $localDataExpired")
-        Timber.d("Cache timestamp: ${cacheSettings.nextCurrencyRateUpdating}")
+                ?: true
         if (localDataExpired) {
             viewModelScope.launch {
                 try {
                     currencyRepo.updateLocalData()
                     val datas = currencyRepo.getLocalData()
+                    availableCurrencies = datas
                     Timber.d("Data is: $datas")
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -55,12 +57,19 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel() {
             viewModelScope.launch {
                 try {
                     val datas = currencyRepo.getLocalData()
+                    availableCurrencies = datas
                     Timber.d("Data is: $datas")
                 } catch (e: Exception) {
                     Timber.e(e)
                 }
             }
         }
+    }
+
+    fun onSwapClicked() {
+        Timber.i("onSwipeClicked!")
+        selectedInputCurrency swap selectedOutputCurrency
+        recalculate()
     }
 
     fun onCurrencyButtonClicked(field: CurrencyMode) {
@@ -95,19 +104,21 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onSourceInputTextChanged(text: String) {
+        inputCurrencyValue = text
+        recalculate()
+    }
+
     private fun recalculate() {
         if (availableCurrencies == null) return
-        val inputCurrency =  availableCurrencies!!.find { it.code == selectedInputCurrency.value }
+        val inputCurrency = availableCurrencies!!.find { it.code == selectedInputCurrency.value }
         val outputCurrency = availableCurrencies!!.find { it.code == selectedOutputCurrency.value }
         val inputValue = inputCurrencyValue.toFloatOrNull() ?: 0f
         if (inputCurrency == null || outputCurrency == null || inputValue == 0f) {
             outputCurrencyValue.value = "00.00"
         } else {
-            outputCurrencyValue.value = ((inputValue / inputCurrency.fraction) * outputCurrency.fraction).toString()
+            outputCurrencyValue.value =
+                ((inputValue / inputCurrency.fraction) * outputCurrency.fraction).toString()
         }
-    }
-
-    private fun onCurrencySelected(field: CurrencyMode) {
-
     }
 }

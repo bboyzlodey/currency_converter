@@ -21,8 +21,8 @@ class CurrencyRepository @Inject constructor() {
         return webApi.getCurrencyRates()
     }
 
-    suspend fun getLocalData() : List<Pair<String, Float>> {
-        return db.getAll().map { it.code to it.fraction }
+    suspend fun getLocalData() : List<DBCurrency> {
+        return db.getAll()
     }
 
     suspend fun updateLocalData() {
