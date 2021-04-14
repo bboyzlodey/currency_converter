@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.example.currencyconverter.R
@@ -38,6 +39,7 @@ class ConvertCurrencyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
         initListeners()
+        binding.sourceCurrencyEditText.setText("1", TextView.BufferType.NORMAL)
     }
 
     private fun initObservers() {

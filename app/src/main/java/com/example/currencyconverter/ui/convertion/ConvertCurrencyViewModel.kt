@@ -9,6 +9,7 @@ import com.example.currencyconverter.utils.DialogFactory
 import com.example.currencyconverter.utils.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,25 +29,58 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     val dialog = MutableLiveData<DialogFactory.DialogData>()
 
     private var availableCurrencies: List<DBCurrency>? = null
-    var selectedInputCurrency = MutableLiveData<String>()
-    var selectedOutputCurrency = MutableLiveData<String>()
+    var selectedInputCurrency = MutableLiveData<String>("USD")
+    var selectedOutputCurrency = MutableLiveData<String>("RUB")
     var outputCurrencyValue = MutableLiveData<String>("")
-    private var inputCurrencyValue = "0.0"
+    private var inputCurrencyValue = "1.0"
+    private val moneyFormat = "%.2f"
 
     @OnLifecycleEvent(value = Lifecycle.Event.ON_START)
     fun onStart() {
-        init()
+        recalculate()
+        getData()
     }
 
-    private fun init() {
+    private fun recalculate() {
+        if (availableCurrencies == null) return
+        val inputCurrency = availableCurrencies!!.find { it.code == selectedInputCurrency.value }
+        val outputCurrency = availableCurrencies!!.find { it.code == selectedOutputCurrency.value }
+        val inputValue = inputCurrencyValue.toFloatOrNull() ?: 0f
+        if (inputCurrency == null || outputCurrency == null || inputValue == 0f) {
+            outputCurrencyValue.value = "00.00"
+        } else {
+            outputCurrencyValue.value =
+                moneyFormat.format(((inputValue / inputCurrency.fraction) * outputCurrency.fraction))
+                    .replace(',', '.')
+        }
+    }
+
+    private fun getData() {
+        viewModelScope.launch {
+            currencyRepo.getLocalData()
+                .collect {
+                    processCurrencyRateUpdated(rates = it)
+                    createUpdatingCoroutine()
+                }
+        }
+    }
+
+    private fun processCurrencyRateUpdated(rates: List<DBCurrency>) {
+        Timber.i("processCurrencyRateUpdated")
+        Timber.d("new currencies: $rates")
+        availableCurrencies = rates
+        recalculate()
+    }
+
+    private fun createUpdatingCoroutine() {
         val nextUpdate =
-            cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.getLostTime(it) }
-                ?: 100
-        Timber.i("Next update exist with delay: $nextUpdate")
+            cacheSettings.nextCurrencyRateUpdating?.let { dateTimeHelper.getLostTime(it) } ?: 100
         viewModelScope.launch {
             try {
-                availableCurrencies = currencyRepo.getLocalData()
                 delay(nextUpdate)
+                Timber.i("delay start")
+                delay(nextUpdate)
+                Timber.i("delay ended")
                 currencyRepo.updateLocalData()
             } catch (e: Exception) {
                 Timber.e(e)
@@ -96,18 +130,5 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     fun onSourceInputTextChanged(text: String) {
         inputCurrencyValue = text
         recalculate()
-    }
-
-    private fun recalculate() {
-        if (availableCurrencies == null) return
-        val inputCurrency = availableCurrencies!!.find { it.code == selectedInputCurrency.value }
-        val outputCurrency = availableCurrencies!!.find { it.code == selectedOutputCurrency.value }
-        val inputValue = inputCurrencyValue.toFloatOrNull() ?: 0f
-        if (inputCurrency == null || outputCurrency == null || inputValue == 0f) {
-            outputCurrencyValue.value = "00.00"
-        } else {
-            outputCurrencyValue.value =
-                ((inputValue / inputCurrency.fraction) * outputCurrency.fraction).toString()
-        }
     }
 }

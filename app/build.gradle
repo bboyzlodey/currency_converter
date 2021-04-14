@@ -52,6 +52,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
+    // Kotlin components
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20"
+//    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
+//    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
+
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
