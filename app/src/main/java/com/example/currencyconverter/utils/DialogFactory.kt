@@ -2,6 +2,7 @@ package com.example.currencyconverter.utils
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import com.example.currencyconverter.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object DialogFactory {
@@ -15,7 +16,7 @@ object DialogFactory {
     )
 
     fun showDialog(context: Context, data: DialogData) {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Dialog)
             .setNeutralButton(data.neutralButtonTitle) { dialog, which -> data.neutralClicked.invoke() }
             .setPositiveButton(data.positiveButtonTitle) { dialog, _ ->
                 data.itemSelectedListener.invoke(

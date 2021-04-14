@@ -1,15 +1,53 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.CurrencyConverter" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
+
+    <style name="CurrencyConverter" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/blue_light</item>
         <item name="colorPrimaryVariant">@color/blue_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <item name="colorOnSurface">@color/grey</item>
+
+        <item name="colorOnPrimary">@color/blue_light</item>
+        <item name="colorSurface">@color/grey</item>
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="colorSurface">@color/blue_light</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <item name="android:textColorHint">@color/grey</item>
+    </style>
+
+    <style name="ThemeOverlay_InputLayout">
+        <item name="textAppearanceCaption">@style/HintText</item>
+        <item name="textAppearanceSubtitle1">@style/InputText</item>
+        <item name="android:textColorPrimary">@color/purple_dark</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+    </style>
+
+    <style name="HintText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="InputText">
+        <item name="android:textSize">28sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+
+    </style>
+
+    <style name="ThemeOverlay_Dialog">
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="textAppearanceSubtitle1">@style/DialogTitle</item>
+        <item name="textAppearanceBody1">@style/CurrencyItem</item>
+        <item name="colorSecondary">@color/blue_light</item>
+    </style>
+
+    <style name="DialogTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="CurrencyItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/purple_dark</item>
+        <item name="fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="CurrencyButton" parent="Widget.MaterialComponents.Button.TextButton">
