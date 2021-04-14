@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.example.currencyconverter.R
+import com.example.currencyconverter.databinding.FragmentConvertCurrencyBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ConvertCurrencyFragment : Fragment() {
 
     private val viewModel: ConvertCurrencyViewModel by viewModels()
+
+    private lateinit var binding: FragmentConvertCurrencyBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +25,10 @@ class ConvertCurrencyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_convert_currency, container, false)
+        binding = FragmentConvertCurrencyBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,8 +42,14 @@ class ConvertCurrencyFragment : Fragment() {
     }
 
     private fun initListeners() {
-        requireView().findViewById<View>(R.id.swap)?.setOnClickListener {
+        binding.swap.setOnClickListener {
             viewModel.onSwapClicked()
+        }
+        binding.sourceCurrency.setOnClickListener {
+            viewModel.onCurrencyButtonClicked(CurrencyMode.INPUT)
+        }
+        binding.targetCurrency.setOnClickListener {
+            viewModel.onCurrencyButtonClicked(CurrencyMode.OUTPUT)
         }
     }
 

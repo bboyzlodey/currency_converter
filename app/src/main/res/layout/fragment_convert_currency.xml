@@ -1,85 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="@dimen/converter_screen_padding_start"
-    android:paddingTop="@dimen/converter_screen_padding_top"
-    android:paddingEnd="@dimen/converter_screen_padding_end"
-    tools:context=".ui.convertion.ConvertCurrencyFragment">
+<layout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userSendInputLayout"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="33dp"
-        android:hint="@string/you_send"
-        app:hintEnabled="true"
-        app:layout_constraintEnd_toStartOf="@id/sourceCurrency"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
+        <variable
+            name="viewModel"
+            type="com.example.currencyconverter.ui.convertion.ConvertCurrencyViewModel" />
+    </data>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/sourceCurrency"
-        style="@style/CurrencyButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:hintEnabled="true"
-        app:layout_constraintBottom_toBottomOf="@id/userSendInputLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="EUR" />
-
-    <ImageButton
-        android:id="@+id/swap"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_swap"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/userSendInputLayout" />
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/resultLayout"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="33dp"
-        android:hint="@string/they_get"
-        app:layout_constraintEnd_toStartOf="@id/targetCurrency"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/swap">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="number"
-            app:textInputLayoutFocusedRectEnabled="false" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/targetCurrency"
-        style="@style/CurrencyButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/resultLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="EUR" />
-
-    <androidx.constraintlayout.widget.Barrier
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="sourceCurrency, targetCurrency, resultLayout, userSendInputLayout" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:paddingStart="@dimen/converter_screen_padding_start"
+        android:paddingTop="@dimen/converter_screen_padding_top"
+        android:paddingEnd="@dimen/converter_screen_padding_end"
+        tools:context=".ui.convertion.ConvertCurrencyFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/userSendInputLayout"
+            style="@style/Widget.Design.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="33dp"
+            android:hint="@string/you_send"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toStartOf="@id/sourceCurrency"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sourceCurrency"
+            style="@style/CurrencyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:hintEnabled="true"
+            app:layout_constraintBottom_toBottomOf="@id/userSendInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="EUR" />
+
+        <ImageButton
+            android:id="@+id/swap"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_swap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userSendInputLayout" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/resultLayout"
+            style="@style/Widget.Design.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="33dp"
+            android:hint="@string/they_get"
+            android:enabled="false"
+            app:layout_constraintEnd_toStartOf="@id/targetCurrency"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/swap">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                app:textInputLayoutFocusedRectEnabled="false" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/targetCurrency"
+            style="@style/CurrencyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/resultLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="EUR" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="sourceCurrency, targetCurrency, resultLayout, userSendInputLayout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
