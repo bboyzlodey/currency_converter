@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/blue_light</item>
         <item name="colorPrimaryVariant">@color/blue_dark</item>
         <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <item name="colorOnSurface">@color/grey</item>
 
