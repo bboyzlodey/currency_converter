@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.example.currencyconverter.R
 import com.example.currencyconverter.data.CacheSettings
-import com.example.currencyconverter.data.local.DBCurrency
 import com.example.currencyconverter.data.CurrencyRepository
+import com.example.currencyconverter.data.local.DBCurrency
 import com.example.currencyconverter.utils.DateTimeHelper
 import com.example.currencyconverter.utils.DialogFactory
 import com.example.currencyconverter.utils.swap
@@ -36,7 +36,7 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     lateinit var cacheSettings: CacheSettings
 
 
-    private var availableCurrencies: List<DBCurrency>? = null
+    private var availableCurrencies: List<DBCurrency> = emptyList()
     private var inputCurrencyValue = "1.0"
 
     val dialog = MutableLiveData<DialogFactory.DialogData>()
@@ -52,9 +52,8 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     }
 
     private fun recalculate() {
-        if (availableCurrencies == null) return
-        val inputCurrency = availableCurrencies!!.find { it.code == selectedInputCurrency.value }
-        val outputCurrency = availableCurrencies!!.find { it.code == selectedOutputCurrency.value }
+        val inputCurrency = availableCurrencies.find { it.code == selectedInputCurrency.value }
+        val outputCurrency = availableCurrencies.find { it.code == selectedOutputCurrency.value }
         val inputValue = inputCurrencyValue.toFloatOrNull() ?: 0f
         if (inputCurrency == null || outputCurrency == null || inputValue == 0f) {
             outputCurrencyValue.value = "00.00"
@@ -82,7 +81,6 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
 
     private fun processCurrencyRateUpdated(rates: List<DBCurrency>) {
         Timber.i("processCurrencyRateUpdated")
-        Timber.d("new currencies: $rates")
         availableCurrencies = rates
         recalculate()
     }
@@ -93,9 +91,6 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
         viewModelScope.launch {
             try {
                 delay(nextUpdate)
-                Timber.i("delay start")
-                delay(nextUpdate)
-                Timber.i("delay ended")
                 currencyRepo.fetchCurrencyRates()
             } catch (e: Exception) {
                 Timber.e(e)
@@ -111,35 +106,33 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     }
 
     fun onCurrencyButtonClicked(field: CurrencyMode) {
-        val currencyList = availableCurrencies?.map { it.code } ?: emptyList()
-        dialog.value = when (field) {
+        val currencyList = availableCurrencies.map { it.code }
+        val chooseCurrencyDialogData = DialogFactory.DialogData(
+            context.getString(R.string.choose_currency_dialog_title),
+            {},
+            context.getString(R.string.ok),
+            context.getString(R.string.cancel),
+            currencyList,
+            0,
+            {}
+        )
+
+        when (field) {
             CurrencyMode.SOURCE -> {
-                DialogFactory.DialogData(
-                    context.getString(R.string.choose_currency_dialog_title),
-                    {},
-                    context.getString(R.string.ok),
-                    context.getString(R.string.cancel),
-                    currencyList,
-                    currencyList.indexOf(selectedInputCurrency.value),
-                    {
-                        selectedInputCurrency.value = currencyList[it]
-                        recalculate()
-                    }
-                )
+                chooseCurrencyDialogData.selectedItem =
+                    currencyList.indexOf(selectedInputCurrency.value)
+                chooseCurrencyDialogData.itemSelectedListener = {
+                    selectedInputCurrency.value = currencyList[it]
+                    recalculate()
+                }
             }
             CurrencyMode.TARGET -> {
-                DialogFactory.DialogData(
-                    context.getString(R.string.choose_currency_dialog_title),
-                    {},
-                    context.getString(R.string.ok),
-                    context.getString(R.string.cancel),
-                    currencyList,
-                    currencyList.indexOf(selectedOutputCurrency.value),
-                    {
-                        selectedOutputCurrency.value = currencyList[it]
-                        recalculate()
-                    }
-                )
+                chooseCurrencyDialogData.selectedItem =
+                    currencyList.indexOf(selectedOutputCurrency.value)
+                chooseCurrencyDialogData.itemSelectedListener = {
+                    selectedOutputCurrency.value = currencyList[it]
+                    recalculate()
+                }
             }
         }
     }

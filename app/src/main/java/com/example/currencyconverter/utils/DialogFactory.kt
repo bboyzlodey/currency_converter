@@ -12,8 +12,8 @@ object DialogFactory {
         val neutralButtonTitle: String? = null,
         val positiveButtonTitle: String? = null,
         val listData: List<String>,
-        val selectedItem: Int,
-        val itemSelectedListener: ((Int) -> Unit)
+        var selectedItem: Int,
+        var itemSelectedListener: ((Int) -> Unit)
     )
 
     fun showDialog(context: Context, data: DialogData) {
