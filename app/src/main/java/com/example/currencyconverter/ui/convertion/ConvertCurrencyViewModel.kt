@@ -123,18 +123,20 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
                 recalculate()
             }
         }
+
+        dialog.value = chooseCurrencyDialogData
     }
 
     private fun getDefaultDialogData(): DialogFactory.DialogData {
         val currencyList = availableCurrencies.map { it.code }
         return DialogFactory.DialogData(
-            context.getString(R.string.choose_currency_dialog_title),
-            {},
-            context.getString(R.string.ok),
-            context.getString(R.string.cancel),
-            currencyList,
-            0,
-            {  }
+            title = context.getString(R.string.choose_currency_dialog_title),
+            neutralClicked = {},
+            positiveButtonTitle = context.getString(R.string.ok),
+            neutralButtonTitle = context.getString(R.string.cancel),
+            listData = currencyList,
+            selectedItem = 0,
+            itemSelectedListener = {}
         )
     }
 
