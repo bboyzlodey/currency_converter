@@ -106,35 +106,36 @@ class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObs
     }
 
     fun onCurrencyButtonClicked(field: CurrencyMode) {
+        fun getMutableData(): MutableLiveData<String> {
+            return when (field) {
+                CurrencyMode.SOURCE -> selectedInputCurrency
+                CurrencyMode.TARGET -> selectedOutputCurrency
+            }
+        }
+
+        val chooseCurrencyDialogData = getDefaultDialogData()
+        val mutableField = getMutableData()
+
+        chooseCurrencyDialogData.run {
+            selectedItem = listData.indexOf(mutableField.value)
+            itemSelectedListener = {
+                mutableField.value = listData[it]
+                recalculate()
+            }
+        }
+    }
+
+    private fun getDefaultDialogData(): DialogFactory.DialogData {
         val currencyList = availableCurrencies.map { it.code }
-        val chooseCurrencyDialogData = DialogFactory.DialogData(
+        return DialogFactory.DialogData(
             context.getString(R.string.choose_currency_dialog_title),
             {},
             context.getString(R.string.ok),
             context.getString(R.string.cancel),
             currencyList,
             0,
-            {}
+            {  }
         )
-
-        when (field) {
-            CurrencyMode.SOURCE -> {
-                chooseCurrencyDialogData.selectedItem =
-                    currencyList.indexOf(selectedInputCurrency.value)
-                chooseCurrencyDialogData.itemSelectedListener = {
-                    selectedInputCurrency.value = currencyList[it]
-                    recalculate()
-                }
-            }
-            CurrencyMode.TARGET -> {
-                chooseCurrencyDialogData.selectedItem =
-                    currencyList.indexOf(selectedOutputCurrency.value)
-                chooseCurrencyDialogData.itemSelectedListener = {
-                    selectedOutputCurrency.value = currencyList[it]
-                    recalculate()
-                }
-            }
-        }
     }
 
     fun onSourceInputTextChanged(text: String) {
