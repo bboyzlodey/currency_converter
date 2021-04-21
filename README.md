@@ -3,9 +3,13 @@
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-1.4-blue.svg)](https://kotlinlang.org)
 
 A simple currency conversion application. A network request for a free resource [open.exchangerate-api](https://open.exchangerate-api.com/v6/latest/) is used. The result will be saved to local storage (database). The database is refreshed when the data is out of date (the timestamp of the next data refresh on the server is stored).
+
+
+
 ## Project characteristics and tech-stack
 
-<img src="app_screen.jpg" width="336" align="right" hspace="20">
+<img src="/app_screen.png" width="336" align="right" hspace="20">
+
 
 * Tech-stack
     * [100% Kotlin](https://kotlinlang.org/) + [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - perform background operations
