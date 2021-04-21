@@ -27,8 +27,9 @@ object DialogFactory {
             }
             .setSingleChoiceItems(
                 data.listData.toTypedArray(),
-                data.selectedItem
-            ) { dialog, which -> }
+                data.selectedItem,
+                null,
+            )
             .show()
     }
 }

@@ -20,20 +20,12 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ConvertCurrencyViewModel @Inject constructor() : ViewModel(), LifecycleObserver {
-
-    @ApplicationContext
-    @Inject
-    lateinit var context: Context
-
-    @Inject
-    lateinit var dateTimeHelper: DateTimeHelper
-
-    @Inject
-    lateinit var currencyRepo: CurrencyRepository
-
-    @Inject
-    lateinit var cacheSettings: CacheSettings
+class ConvertCurrencyViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val dateTimeHelper: DateTimeHelper,
+    private val currencyRepo: CurrencyRepository,
+    private val cacheSettings: CacheSettings
+    ) : ViewModel(), LifecycleObserver {
 
 
     private var availableCurrencies: List<DBCurrency> = emptyList()
