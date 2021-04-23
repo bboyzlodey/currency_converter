@@ -25,6 +25,7 @@ class CurrencyRepository @Inject constructor() {
         withContext(Dispatchers.Main) {
             cacheSettings.nextCurrencyRateUpdating = response.nextUpdate
         }
+        //const
         Timber.i("updateLocalData")
         val local = response.rates.map {
             DBCurrency(

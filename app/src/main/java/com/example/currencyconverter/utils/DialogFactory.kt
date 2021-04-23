@@ -5,7 +5,10 @@ import androidx.appcompat.app.AlertDialog
 import com.example.currencyconverter.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+//лучше создать не объект а класс наследуемый от AlertDialog.Builder тогда ты сможешь изпользовать его в layout
+// и если хочешь вызывать его везде, создай  extension функциию Context.dialog и создавай там объект
 object DialogFactory {
+    //data class?
     class DialogData(
         val title: String,
         val neutralClicked: () -> Unit,

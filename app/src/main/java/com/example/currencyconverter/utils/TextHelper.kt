@@ -4,10 +4,12 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 
+//extension функция для edit text
 object TextHelper {
 
-    fun applyColor(text: String, coloredString: String, color: Int): CharSequence {
-        return SpannableString(text).apply {
+    // вместо { =
+    fun applyColor(text: String, coloredString: String, color: Int): CharSequence =
+        SpannableString(text).apply {
             val lastIndex = text.lastIndexOf(coloredString)
             setSpan(
                 ForegroundColorSpan(color),
@@ -16,5 +18,4 @@ object TextHelper {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-    }
 }

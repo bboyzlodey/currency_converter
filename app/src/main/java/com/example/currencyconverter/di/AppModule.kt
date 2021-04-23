@@ -22,30 +22,28 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCurrencyWebApi(): CurrencyApiService {
-
-        return Retrofit.Builder()
+    fun provideCurrencyWebApi(): CurrencyApiService =
+        Retrofit.Builder()
             .client( OkHttpClient.Builder().build())
+                //const
             .baseUrl("https://open.exchangerate-api.com/v6/latest/")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(CurrencyApiService::class.java)
-    }
 
     @Singleton
     @Provides
-    fun sharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("currency_rates_cache", Context.MODE_PRIVATE)
-    }
+    fun sharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        //const
+        context.getSharedPreferences("currency_rates_cache", Context.MODE_PRIVATE)
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "currency.db").build()
-    }
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
+        //const
+         Room.databaseBuilder(context, AppDatabase::class.java, "currency.db").build()
 
     @Provides
-    fun provideCurrencyDao(appDatabase: AppDatabase) : CurrencyDao {
-        return appDatabase.currencyDao()
-    }
+    fun provideCurrencyDao(appDatabase: AppDatabase) : CurrencyDao =
+        appDatabase.currencyDao()
 }
