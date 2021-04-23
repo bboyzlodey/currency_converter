@@ -3,4 +3,5 @@
     <dimen name="converter_screen_padding_top">36dp</dimen>
     <dimen name="converter_screen_padding_start">28dp</dimen>
     <dimen name="converter_screen_padding_end">30dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
 </resources>

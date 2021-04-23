@@ -7,4 +7,8 @@
     <string name="ok">OK</string>
     <string name="currency_format">%.2f</string>
     <string name="input_digits">0123456789.</string>
+    <string name="network_status_mask">Network status: %s</string>
+    <string name="network_status_available">Available</string>
+    <string name="network_status_unavailable">Unavailable</string>
+
 </resources>

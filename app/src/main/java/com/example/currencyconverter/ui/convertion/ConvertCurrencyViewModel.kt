@@ -1,16 +1,16 @@
 package com.example.currencyconverter.ui.convertion
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.*
 import com.example.currencyconverter.R
 import com.example.currencyconverter.data.CacheSettings
 import com.example.currencyconverter.data.CurrencyRepository
 import com.example.currencyconverter.data.local.DBCurrency
-import com.example.currencyconverter.utils.DateTimeHelper
-import com.example.currencyconverter.utils.DialogFactory
-import com.example.currencyconverter.utils.swap
+import com.example.currencyconverter.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
@@ -25,7 +25,7 @@ class ConvertCurrencyViewModel @Inject constructor(
     private val dateTimeHelper: DateTimeHelper,
     private val currencyRepo: CurrencyRepository,
     private val cacheSettings: CacheSettings
-    ) : ViewModel(), LifecycleObserver {
+) : ViewModel(), LifecycleObserver {
 
 
     private var availableCurrencies: List<DBCurrency> = emptyList()
@@ -36,11 +36,13 @@ class ConvertCurrencyViewModel @Inject constructor(
     var selectedOutputCurrency = MutableLiveData<String>("RUB")
     var outputCurrencyValue = MutableLiveData<String>("")
     var isLoading = MutableLiveData<Boolean>()
+    val networkStatus = MutableLiveData<CharSequence>()
 
     @OnLifecycleEvent(value = Lifecycle.Event.ON_START)
     fun onStart() {
         recalculate()
         getData()
+        initNetworkStatusFlow()
     }
 
     private fun recalculate() {
@@ -75,6 +77,25 @@ class ConvertCurrencyViewModel @Inject constructor(
         Timber.i("processCurrencyRateUpdated")
         availableCurrencies = rates
         recalculate()
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun initNetworkStatusFlow() {
+        viewModelScope.launch {
+            NetworkStatusTracker(context)
+                .networkStatus
+                .collect { status ->
+                    processNetworkStatusChanged(status)
+                }
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun processNetworkStatusChanged(status: NetworkStatus) {
+        val statusMessage = context.getString(status.message).toLowerCase()
+        val messageColor = status.color
+        val fullStatus = context.getString(R.string.network_status_mask, statusMessage)
+        networkStatus.value = TextHelper.applyColor(fullStatus, statusMessage, messageColor)
     }
 
     private fun createUpdatingCoroutine() {

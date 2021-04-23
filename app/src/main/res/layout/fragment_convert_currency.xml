@@ -30,7 +30,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingStart="@dimen/converter_screen_padding_start"
             android:paddingTop="@dimen/converter_screen_padding_top"
             android:paddingEnd="@dimen/converter_screen_padding_end"
@@ -134,5 +134,11 @@
                 app:constraint_referenced_ids="sourceCurrency, targetCurrency, resultLayout, userSendInputLayout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@{viewModel.networkStatus}" />
     </LinearLayout>
 </layout>
