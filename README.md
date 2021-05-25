@@ -25,7 +25,6 @@ A simple currency conversion application. A network request for a free resource 
 * Modern Architecture
     * Single activity architecture ( with [Navigation component](https://developer.android.com/guide/navigation/navigation-getting-started))
     * MVVM (presentation layer)
-    * [Dynamic feature modules](https://developer.android.com/studio/projects/dynamic-delivery)
     * [Android Architecture components](https://developer.android.com/topic/libraries/architecture) ([ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel), [LiveData](https://developer.android.com/topic/libraries/architecture/livedata), [Navigation](https://developer.android.com/jetpack/androidx/releases/navigation))
     * [Android KTX](https://developer.android.com/kotlin/ktx) - Jetpack Kotlin extensions
 * UI
